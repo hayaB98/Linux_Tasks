@@ -1,6 +1,17 @@
 part 1 
 
-
+pvs
+fdisk -l /dev/sda
+pvcreate /dev/sdb /dev/sdc
+vgcreate -s 16M vg1 /dev/sdb /dev/sdc
+lvcreate -l 50 -n lvg
+mkfs.ext4 /dev/vg1/lvg
+vim /etc/fstab
+mkdir -p /mnt/data
+UUID=xxxxxxxx /mnt/data ext4 defaults 0 0
+vim /etc/fstab
+mount -a
+mount
 _________________________
 
 part 2
@@ -19,11 +30,13 @@ _________________________
 
 part 3
 
-ssh-keygen -t RSA -b 4096 -C 
+ssh-keygen -t RSA -b 4096 
 ssh-copy-id user1@192.168.205.82
 vi /etc/ssh/sshd_config
 PasswordAuthentication no
 systemctl restart sshd.service
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub remote-host
 
 _________________________
 
@@ -51,15 +64,37 @@ bash /tmp/test.sh &
 pid=$?
 sleep 600
 kill $pid
-wait $pid
+jobs
+kill pid
+^c
 
 __________________________
 
 part 7 
 
 yum install tmux
-yum install httpd
-yum install mysql
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+yum --enablerepo=remi,remi-php71 install httpd php php-common
+rpm -Uvh https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm
+yum install mysql-community-server
+yum install createrepo
+mkdir /repository1
+wget https://repo.zabbix.com/zabbix/4.4/rhel/7/x86_64/ -P /repository1
+createrepo /repository1
+vi /etc/yum.repos.d/custom.repo
+[customrepo]
+name=Custom Repository
+baseurl=file:///repository1/
+enabled=1
+gpgcheck=0
+yum-config-manager --disablerepo=*
+yum-config-manager --enable custom.repo
+yum install zabbix
+yum install zabbix-web
+yum install php
+yum install zabbix-server
+yum install zabbix-agent
 
 
 __________________________
@@ -79,9 +114,23 @@ crontab -e
 30 01 * * * root /tmp/scriptT.sh
 vi /tmp/scriptT.sh
 !/bin/bash
-who | awk '{ print $1 "   " $3 "   " $4}' > testSc.txt
+who | awk '{ print $3 "   " $4 "   " $1}' > user_time.txt
 
 __________________________
 
 
 part 10 
+
+yum -y install mariadb-server
+systemctl start mariadb
+iptables-save > IPtablesbackup.txt
+iptables -A INPUT -p tcp --dport 3306 -j ACCEPT
+mysql -u root 
+CREATE USER 'user1'@localhost IDENTIFIED BY 'password1';
+GRANT ALL PRIVILEGES ON *.* TO 'user1'@localhost IDENTIFIED BY 'password1';
+FLUSH PRIVILEGES;
+CREATE DATABASE TestDB ;
+USE TestDB ;
+CREATE TABLE department ( fname Varchar(20), lname Varchar(20), programE Varchar(20), eGyear Varchar(20), studentN Varchar(20), PRIMARY KEY(studentN));
+INSERT INTO TestDB VALUES ( 'Allen' , 'Brown' , 'mechanical' , '2017' , '110-001' ),( 'David' , 'Brown' , 'mechanical' , '2017' , '110-002' ),( 'Marry' , 'Green' , 'computer scince' , '2018' , '110-003' ); 
+
