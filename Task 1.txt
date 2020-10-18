@@ -1,0 +1,87 @@
+part 1 
+
+
+_________________________
+
+part 2
+
+groupadd TrainingGroup
+useradd -u 601 -G TrainingGroup -s /sbin/nologin user1
+groupadd admin
+useradd -G admin user2
+useradd -G admin user3
+passwd user2
+passwd user3
+visudo
+user3 ALL : (ALL) ALL
+
+_________________________
+
+part 3
+
+ssh-keygen -t RSA -b 4096 -C 
+ssh-copy-id user1@192.168.205.82
+vi /etc/ssh/sshd_config
+PasswordAuthentication no
+systemctl restart sshd.service
+
+_________________________
+
+part 4
+
+cp /etc/fstab /var/tmp/
+chgrp admin /var/tmp/fstab
+setfacl -m u:user1:rwx /var/tmp/fstab
+setfacl -m u:user2:--- /var/tmp/fstab
+
+_________________________
+
+part 5
+
+vi /etc/selinux/config
+SELINUX=enforcing
+
+_________________________
+
+part 6 
+
+vi /tmp/test.sh
+bash /tmp/test.sh &
+#!/bin/bash
+pid=$?
+sleep 600
+kill $pid
+wait $pid
+
+__________________________
+
+part 7 
+
+yum install tmux
+yum install httpd
+yum install mysql
+
+
+__________________________
+
+part 8
+
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --permanent --add-rich-rule="rule family='ipv4' source address='192.168.205.75' reject"
+firewall-cmd --reload
+
+__________________________
+
+part 9 
+
+crontab -e
+30 01 * * * root /tmp/scriptT.sh
+vi /tmp/scriptT.sh
+!/bin/bash
+who | awk '{ print $1 "   " $3 "   " $4}' > testSc.txt
+
+__________________________
+
+
+part 10 
