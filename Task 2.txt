@@ -102,8 +102,8 @@ vi /var/www/html/index.html
 </br>
 <A href="disk.html"> Disk Data </A>
 </br>
-<A href="/var/www/html/cpu.html"> CPU Data </A>
+<A href="cpu.html"> CPU Data </A>
 </br>
-<A href="/var/www/html/mem.html"> Memory Data </A>
+<A href="mem.html"> Memory Data </A>
 </br>
 </body>
