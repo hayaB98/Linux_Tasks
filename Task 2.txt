@@ -78,12 +78,6 @@ totalAvailable=0;
 awk '$1!="Timestamp" { total += $2; totalAvailable += $3; count++ } END { print "used :" total/count "     ""Available :" totalAvailable/count }' Disk.txt >> diskAvg.txt
 sed 's/$/<br>/' diskAvg.txt > Disk1.txt
 cat Disk1.txt > /var/www/html/diskAvg.html
-count=0;
-totalCPU=0;
-totalMem=0;
-awk '$1!="Timestamp" { total += $2; totalAvailable += $3; count++ } END { print "CPU :" total/count "   " "Mem : " totalAvailable/count }' CPU.txt >> cpuAvg.txt
-sed 's/$/<br>/' cpuAvg.txt >    CPU1.txt
-cat CPU1.txt > /var/www/html/cpuAvg.html
 systemctl start httpd
 firewall--cmd --zone= public --add-service==http 
 vi /etc/httpd/conf/httpd.conf
@@ -97,7 +91,7 @@ vi /var/www/html/index.html
 </br>
 <A href="Mem.html"> Memory Data </A>
 </br>
-<A href="Cpu.html"> CPU Data </A>
+<A href="cpu.html"> CPU Data </A>
 </br>
 </body>
 vi /var/www/html/Disk.html
@@ -110,10 +104,3 @@ vi /var/www/html/Mem.html
 </br>
 <A href="memAvg.html"> Mem Average </A>
 </br>
-vi /var/www/html/Cpu.html
-<A href="cpu.html"> Cpu Data </A>
-</br>
-<A href="cpuAvg.html"> Cpu Average </A>
-</br>
-
-
