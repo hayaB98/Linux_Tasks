@@ -10,7 +10,7 @@ df | gawk '
         gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
     }
     BEGIN{
-        print timeadd(ARGV[1], 60)
+        print  "Timestamp = " timeadd(ARGV[1], 60)
     }
 '>>Disk.txt
 
@@ -19,7 +19,7 @@ df | gawk '
         gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
     }
     BEGIN{
-        print timeadd(ARGV[1], 60)
+        print  "Timestamp = " timeadd(ARGV[1], 60)
     }
 '>>Mem.txt
 
@@ -28,7 +28,7 @@ df | gawk '
         gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
     }
     BEGIN{
-        print timeadd(ARGV[1], 60)
+        print  "Timestamp = " timeadd(ARGV[1], 60)
     }
 '>>CPU.txt
 df | awk '{print $1 "   " $3 "   " $4}' >> Disk.txt
