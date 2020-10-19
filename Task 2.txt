@@ -88,17 +88,32 @@ systemctl start httpd
 firewall--cmd --zone= public --add-service==http 
 vi /etc/httpd/conf/httpd.conf
 vi /var/www/html/index.html
-<head>
-<title>list of links</title>
 </head>
 <body>
 <A> Welcome to data </A>
 </br>
 </br>
-<A href="disk.html"> Disk Data </A>
+<A href="Disk.html"> Disk Data </A>
 </br>
-<A href="cpu.html"> CPU Data </A>
+<A href="Mem.html"> Memory Data </A>
 </br>
-<A href="mem.html"> Memory Data </A>
+<A href="Cpu.html"> CPU Data </A>
 </br>
 </body>
+vi /var/www/html/Disk.html
+<A href="disk.html"> Disk Data </A>
+</br>
+<A href="diskAvg.html"> Disk Average </A>
+</br>
+vi /var/www/html/Mem.html
+<A href="mem.html"> Mem Data </A>
+</br>
+<A href="memAvg.html"> Mem Average </A>
+</br>
+vi /var/www/html/Cpu.html
+<A href="cpu.html"> Cpu Data </A>
+</br>
+<A href="cpuAvg.html"> Cpu Average </A>
+</br>
+
+
