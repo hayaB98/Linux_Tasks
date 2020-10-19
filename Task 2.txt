@@ -1,6 +1,6 @@
 crontab -e
-*/2 * * * * root /tmp/first.sh
- */10 * * * * root /tmp/second.sh
+*/2 * * * *  /tmp/first.sh
+ */10 * * * *  /tmp/second.sh
 chmod 755 first.sh
 chmod 755 second.sh
 vi /tmp/first.sh
