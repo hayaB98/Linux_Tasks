@@ -15,12 +15,12 @@ df | gawk '
 '>>Disk.txt
 cp Disk.txt Mem.txt
 cp Disk.txt CPU.txt
-df | awk 'NR>1{print $1 "   " $3 "   " $4}' >> Disk.txt
-df | awk '{print $1 "   " $3 "   " $4}' >> /var/www/html/disk.html
-free -m | awk '(NR==2){ print $1 "   " $3 "   " $7}' >> Mem.txt
-free -m | awk '(NR<=2){ print $1 "   " $3 "   " $7}' >> /var/www/html/mem.html
-top  | awk '(NR>1){ print $2 "   " $8 "   " $9}' >> CPU.txt
-top  | awk '{ print $2 "   " $8 "   " $9}' >> /var/www/html/cpu.html
+df | awk '{print $1 "   " $3 "   " $4}' >> Disk.txt
+cp Disk.txt /var/www/html/disk.html
+free -m | awk '(NR<=2){ print $1 "   " $3 "   " $7}' >> Mem.txt
+cp Mem.txt /var/www/html/mem.html
+top  | awk '{ print $2 "   " $8 "   " $9}' >> CPU.txt
+cp CPU.txt /var/www/html/cpu.html
 vi /tmp/second.sh
 #!/bin/bash
 df | gawk '
@@ -36,8 +36,8 @@ cp diskAvg.txt cpuAvg.txt
 count=0;
 total=0;
 totalAvailable=0;
-awk '$1!="Timestamp" { total += $2; totalAvailable += $3; count++ } END { print total/count "   " totalAvailable/count }' Mem.txt >> memAvg.txt
-cp memAvg.txt /var/www/html/mem.html
+awk '$1!="Timestamp" && $2 != "used" { total += $2; totalAvailable += $3; count++ } END { print total/count "   " totalAvailable/count }' Mem.txt >> memAvg.txt
+cat memAvg.txt >> /var/www/html/mem.html
 count=0;
 total=0;
 totalAvailable=0;
@@ -46,8 +46,8 @@ cp diskAvg.txt /var/www/html/disk.html
 count=0;
 totalCPU=0;
 totalMem=0;
-awk '$1!="Timestamp" { total += $2; totalAvailable += $3; count++ } END { print total/count "   " totalAvailable/count }' CPU.txt >> cpuAvg.txt
-cp cpuAvg.txt /var/www/html/cpu.html
+awk '$1!="Timestamp" && $2 != "used" { total += $2; totalAvailable += $3; count++ } END { print total/count "   " totalAvailable/count }' CPU.txt >> cpuAvg.txt
+cat cpuAvg.txt >> /var/www/html/cpu.html
 systemctl start httpd
 firewall--cmd --zone= public --add-service==http 
 vi /etc/httpd/conf/httpd.conf
