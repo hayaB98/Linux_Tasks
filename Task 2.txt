@@ -13,14 +13,35 @@ df | gawk '
         print timeadd(ARGV[1], 60)
     }
 '>>Disk.txt
-cp Disk.txt Mem.txt
-cp Disk.txt CPU.txt
+
+df | gawk '
+    function timeadd(t, s){
+        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
+    }
+    BEGIN{
+        print timeadd(ARGV[1], 60)
+    }
+'>>Mem.txt
+
+df | gawk '
+    function timeadd(t, s){
+        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
+    }
+    BEGIN{
+        print timeadd(ARGV[1], 60)
+    }
+'>>CPU.txt
 df | awk '{print $1 "   " $3 "   " $4}' >> Disk.txt
-cp Disk.txt /var/www/html/disk.html
+sed 's/$/<br>/' Disk.txt > Disk1.txt
+sed 's/$/<br>/' diskAvg.txt >> Disk1.txt
+cat Disk1.txt > /var/www/html/disk.html
 free -m | awk '(NR<=2){ print $1 "   " $3 "   " $7}' >> Mem.txt
-cp Mem.txt /var/www/html/mem.html
+sed 's/$/<br>/' Mem.txt > Mem1.txt
+sed 's/$/<br>/' memAvg.txt >> Mem1.txt
+cat Mem1.txt > /var/www/html/mem.html
 top  | awk '{ print $2 "   " $8 "   " $9}' >> CPU.txt
-cp CPU.txt /var/www/html/cpu.html
+sed 's/$/<br>/' CPU.txt > CPU1.txt
+cat CPU1.txt > /var/www/html/cpu.html
 vi /tmp/second.sh
 #!/bin/bash
 df | gawk '
@@ -31,30 +52,49 @@ df | gawk '
         print "Timestamp = " timeadd(ARGV[1], 60)
     }
 '>>diskAvg.txt
-cp diskAvg.txt memAvg.txt
-cp diskAvg.txt cpuAvg.txt
+df | gawk '
+    function timeadd(t, s){
+        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
+    }
+    BEGIN{
+        print "Timestamp = " timeadd(ARGV[1], 60)
+    }
+'>>memAvg.txt
+df | gawk '
+    function timeadd(t, s){
+        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
+    }
+    BEGIN{
+        print "Timestamp = " timeadd(ARGV[1], 60)
+    }
+'>>cpuAvg.txt
 count=0;
 total=0;
 totalAvailable=0;
-awk '$1!="Timestamp" && $2 != "used" { total += $2; totalAvailable += $3; count++ } END { print total/count "   " totalAvailable/count }' Mem.txt >> memAvg.txt
-cat memAvg.txt >> /var/www/html/mem.html
+awk '$1!="Timestamp" && $2 != "used" { total += $2; totalAvailable += $3; count++ } END { print "used :" total/count "     " "Available :" totalAvailable/count }' Mem.txt >> memAvg.txt
+sed 's/$/<br>/' memAvg.txt > Mem1.txt
+cat Mem1.txt >> /var/www/html/mem.html
 count=0;
 total=0;
 totalAvailable=0;
-awk '$1!="Timestamp" { total += $2; totalAvailable += $3; count++ } END { print total/count "   " totalAvailable/count }' Disk.txt >> diskAvg.txt
-cp diskAvg.txt /var/www/html/disk.html
-count=0;
-totalCPU=0;
-totalMem=0;
-awk '$1!="Timestamp" && $2 != "used" { total += $2; totalAvailable += $3; count++ } END { print total/count "   " totalAvailable/count }' CPU.txt >> cpuAvg.txt
-cat cpuAvg.txt >> /var/www/html/cpu.html
+awk '$1!="Timestamp" { total += $2; totalAvailable += $3; count++ } END { print "used :" total/count "     ""Available :" totalAvailable/count }' Disk.txt >> diskAvg.txt
+sed 's/$/<br>/' diskAvg.txt > Disk1.txt
+cat CPU1.txt >> /var/www/html/cpu.html
 systemctl start httpd
 firewall--cmd --zone= public --add-service==http 
 vi /etc/httpd/conf/httpd.conf
 vi /var/www/html/index.html
-!Doctype
+<head>
+<title>list of links</title>
+</head>
 <body>
-<A href="192.168.205.82/disk.html>Disk Data </A>
-<A href="192.168.205.82/memory.html>Memory Data </A>
-<A href="192.168.205.82/cpu.html>CPU Data </A>
+<A> Welcome to data </A>
+</br>
+</br>
+<A href="disk.html"> Disk Data </A>
+</br>
+<A href="/var/www/html/cpu.html"> CPU Data </A>
+</br>
+<A href="/var/www/html/mem.html"> Memory Data </A>
+</br>
 </body>
