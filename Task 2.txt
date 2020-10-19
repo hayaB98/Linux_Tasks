@@ -72,13 +72,22 @@ count=0;
 total=0;
 totalAvailable=0;
 awk '$1!="Timestamp" && $2 != "used" { total += $2; totalAvailable += $3; count++ } END { print "used :" total/count "     " "Available :" totalAvailable/count }' Mem.txt >> memAvg.txt
-sed 's/$/<br>/' memAvg.txt > Mem1.txt
+sed 's/$/<br>/' Mem.txt > Mem1.txt
+sed 's/$/<br>/' memAvg.txt >> Mem1.txt
 cat Mem1.txt >> /var/www/html/mem.html
 count=0;
 total=0;
 totalAvailable=0;
 awk '$1!="Timestamp" { total += $2; totalAvailable += $3; count++ } END { print "used :" total/count "     ""Available :" totalAvailable/count }' Disk.txt >> diskAvg.txt
-sed 's/$/<br>/' diskAvg.txt > Disk1.txt
+sed 's/$/<br>/' Disk.txt > Disk1.txt
+sed 's/$/<br>/' diskAvg.txt >> Disk1.txt
+cat Disk1.txt >> /var/www/html/disk.html
+count=0;
+totalCPU=0;
+totalMem=0;
+awk '$1!="Timestamp" && $2 != "used" { total += $2; totalAvailable += $3; count++ } END { print "CPU :" total/count "   " "Mem : " totalAvailable/count }' CPU.txt >> cpuAvg.txt
+sed 's/$/<br>/' CPU.txt > CPU1.txt
+sed 's/$/<br>/' cpuAvg.txt >>    CPU1.txt
 cat CPU1.txt >> /var/www/html/cpu.html
 systemctl start httpd
 firewall--cmd --zone= public --add-service==http 
