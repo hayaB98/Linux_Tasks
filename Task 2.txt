@@ -5,32 +5,12 @@ chmod 755 first.sh
 chmod 755 second.sh
 vi /tmp/first.sh
 #!/bin/bash
-df | gawk '
-    function timeadd(t, s){
-        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
-    }
-    BEGIN{
-        print  "Timestamp = " timeadd(ARGV[1], 60)
-    }
-'>>/root/Disk.txt
-
-df | gawk '
-    function timeadd(t, s){
-        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
-    }
-    BEGIN{
-        print  "Timestamp = " timeadd(ARGV[1], 60)
-    }
-'>>/root/Mem.txt
-
-df | gawk '
-    function timeadd(t, s){
-        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
-    }
-    BEGIN{
-        print  "Timestamp = " timeadd(ARGV[1], 60)
-    }
-'>>/root/CPU.txt
+printf " Timestamp : "  >>/root/Disk.txt
+  date +%s  >>/root/Disk.txt
+printf " Timestamp : "  >>/root/Mem.txt
+  date +%s  >>/root/Mem.txt
+printf " Timestamp : "  >>/root/CPU.txt
+  date +%s  >>/root/CPU.txt
 df | awk '{print $1 "   " $3 "   " $4}' >> /root/Disk.txt
 sed 's/$/<br>/' /root/Disk.txt > /root/Disk1.txt
 cat /root/Disk1.txt > /var/www/html/disk.html
@@ -42,30 +22,12 @@ sed 's/$/<br>/' /root/CPU.txt > /root/CPU1.txt
 cat /root/CPU1.txt > /var/www/html/cpu.html
 vi /tmp/second.sh
 #!/bin/bash
-df | gawk '
-    function timeadd(t, s){
-        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
-    }
-    BEGIN{
-        print "Timestamp = " timeadd(ARGV[1], 60)
-    }
-'>>/root/diskAvg.txt
-df | gawk '
-    function timeadd(t, s){
-        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
-    }
-    BEGIN{
-        print "Timestamp = " timeadd(ARGV[1], 60)
-    }
-'>>/root/memAvg.txt
-df | gawk '
-    function timeadd(t, s){
-        gsub(/[-T:]/," ", t); return strftime("%Y-%m-%dT%H:%M:%S", mktime(t)+s)
-    }
-    BEGIN{
-        print "Timestamp = " timeadd(ARGV[1], 60)
-    }
-'>>/root/cpuAvg.txt
+printf " Timestamp : "  >>/root/diskAvg.txt
+  date +%s  >>/root/diskAvg.txt
+printf " Timestamp : "  >>/root/memAvg.txt
+  date +%s  >>/root/memAvg.txt
+printf " Timestamp : "  >>/root/cpuAvg.txt
+  date +%s  >>/root/cpuAvg.txt
 count=0;
 total=0;
 totalAvailable=0;
