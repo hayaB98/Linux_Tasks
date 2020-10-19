@@ -36,7 +36,6 @@ vi /etc/ssh/sshd_config
 PasswordAuthentication no
 systemctl restart sshd.service
 
-ssh-copy-id -i ~/.ssh/id_rsa.pub remote-host
 
 _________________________
 
